@@ -37,3 +37,37 @@ impl Display for Operation {
     }
   }
 }
+
+impl Wordnik {
+  pub fn new(api_key: String, entry: String) -> Wordnik {
+    Wordnik { api_key, entry }
+  }
+
+  fn make_request(
+    &self,
+    url: String,
+  ) -> Result<Value, Box<dyn std::error::Error>> {
+    let client = reqwest::blocking::Client::new();
+    let res = client
+      .get(url)
+      .header("Content-Type", "application/json")
+      .send()?
+      .text()?;
+
+    let res: Value = serde_json::from_str(&res)?;
+    Ok(res)
+  }
+
+  pub fn get_definitions(
+    &self,
+    word: &str,
+  ) -> Result<Value, Box<dyn std::error::Error>> {
+    let url = self.entry.clone()
+      + word
+      + "/"
+      + Operation::Definitions.to_string().as_str()
+      + "?api_key="
+      + &self.api_key;
+    self.make_request(url)
+  }
+}
