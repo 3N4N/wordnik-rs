@@ -44,12 +44,13 @@ use serde::Serialize;
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Definitions {
+  pub word: String,
+  #[serde(rename = "text")]
+  pub definition: String,
   #[serde(default)]
   pub part_of_speech: String,
   pub attribution_text: String,
   pub source_dictionary: String,
-  pub text: String,
-  pub word: String,
   pub attribution_url: String,
   pub wordnik_url: String,
 }
