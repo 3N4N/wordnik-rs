@@ -38,6 +38,22 @@ impl Display for Operation {
   }
 }
 
+use serde::Deserialize;
+use serde::Serialize;
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Definitions {
+  #[serde(default)]
+  pub part_of_speech: String,
+  pub attribution_text: String,
+  pub source_dictionary: String,
+  pub text: String,
+  pub word: String,
+  pub attribution_url: String,
+  pub wordnik_url: String,
+}
+
 impl Wordnik {
   pub fn new(api_key: String, entry: String) -> Wordnik {
     Wordnik { api_key, entry }
@@ -58,16 +74,25 @@ impl Wordnik {
     Ok(res)
   }
 
+  fn parse_definitions(
+    api_res: Value,
+  ) -> Result<Vec<Definitions>, Box<dyn std::error::Error>> {
+    let definitions: Vec<Definitions> = serde_json::from_value(api_res)?;
+    Ok(definitions)
+  }
+
   pub fn get_definitions(
     &self,
     word: &str,
-  ) -> Result<Value, Box<dyn std::error::Error>> {
+  ) -> Result<Vec<Definitions>, Box<dyn std::error::Error>> {
     let url = self.entry.clone()
       + word
       + "/"
       + Operation::Definitions.to_string().as_str()
       + "?api_key="
       + &self.api_key;
-    self.make_request(url)
+    let res = self.make_request(url)?;
+    let defs = Self::parse_definitions(res)?;
+    Ok(defs)
   }
 }
