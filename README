@@ -1,0 +1,28 @@
+Wordnik-rs
+==========
+
+Wordnik-rs is a Rust library wrapper of Wordnik API.
+
+Visit wordnik.com for more.
+
+
+Supported operations
+--------------------
+
+Wordnik API provides the following operations:
+
+  • audio
+  + definitions
+  • etymologies
+  • examples
+  • frequency
+  • hyphenation
+  • phrases
+  • pronunciations
+  • relatedWords
+  • scrabbleScore
+  • topExample
+
+The entries with plus-sign (+) are currently supported by Wordnik-rs.
+
+See https://developer.wordnik.com/docs#/word for more.
