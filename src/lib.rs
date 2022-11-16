@@ -1,11 +1,25 @@
 use serde_json::Value;
 use std::fmt::Display;
 
+/// The struct representing the API endpoint.
+///
+/// # Example
+/// ```
+/// use wordnik::Wordnik;
+///
+/// let api = Wordnik::new(
+///   "YOUR_API_KEY".to_string(),
+///   "https://api.wordnik.com/v4/word.json/".to_string(),
+/// );
+/// ```
 pub struct Wordnik {
   api_key: String,
   entry: String,
 }
 
+/// The supported operations.
+///
+/// See [Wordnik docs](https://developer.wordnik.com/docs#/word).
 pub enum Operation {
   Audio,
   Definitions,
@@ -41,6 +55,7 @@ impl Display for Operation {
 use serde::Deserialize;
 use serde::Serialize;
 
+/// The struct representing API response for word definitions.
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Definitions {
@@ -82,6 +97,21 @@ impl Wordnik {
     Ok(definitions)
   }
 
+  /// Get definitions of a word.
+  ///
+  /// # Example
+  ///
+  /// ```
+  /// use wordnik::Wordnik;
+  ///
+  /// let api = Wordnik::new(
+  ///   "YOUR_API_KEY".to_string(),
+  ///   "https://api.wordnik.com/v4/word.json/".to_string(),
+  /// );
+  ///
+  /// let v = api.get_definitions("word").unwrap();
+  /// println!("{:#?}", v);
+  /// ```
   pub fn get_definitions(
     &self,
     word: &str,
