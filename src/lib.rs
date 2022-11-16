@@ -55,10 +55,10 @@ impl Display for Operation {
 use serde::Deserialize;
 use serde::Serialize;
 
-/// The struct representing API response for word definitions.
+/// The struct representing API response for word definition.
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Definitions {
+pub struct Definition {
   pub word: String,
   #[serde(rename = "text")]
   pub definition: String,
@@ -108,7 +108,7 @@ impl Wordnik {
   pub fn get_definitions(
     &self,
     word: &str,
-  ) -> Result<Vec<Definitions>, Box<dyn std::error::Error>> {
+  ) -> Result<Vec<Definition>, Box<dyn std::error::Error>> {
     let url = self.entry.clone()
       + word
       + "/"
@@ -116,7 +116,7 @@ impl Wordnik {
       + "?api_key="
       + &self.api_key;
     let res = self.make_request(url)?;
-    let definitions: Vec<Definitions> = serde_json::from_value(res)?;
+    let definitions: Vec<Definition> = serde_json::from_value(res)?;
     Ok(definitions)
   }
 }
