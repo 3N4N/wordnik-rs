@@ -90,13 +90,6 @@ impl Wordnik {
     Ok(res)
   }
 
-  fn parse_definitions(
-    api_res: Value,
-  ) -> Result<Vec<Definitions>, Box<dyn std::error::Error>> {
-    let definitions: Vec<Definitions> = serde_json::from_value(api_res)?;
-    Ok(definitions)
-  }
-
   /// Get definitions of a word.
   ///
   /// # Example
@@ -123,7 +116,7 @@ impl Wordnik {
       + "?api_key="
       + &self.api_key;
     let res = self.make_request(url)?;
-    let defs = Self::parse_definitions(res)?;
-    Ok(defs)
+    let definitions: Vec<Definitions> = serde_json::from_value(res)?;
+    Ok(definitions)
   }
 }
