@@ -2,3 +2,7 @@
 
 	* First release!
 	* Added API wrapper for word definitions.
+
+0.2.0 on 2022-11-17 [enan]
+
+	* Added function for getting definitions as pretty string.
