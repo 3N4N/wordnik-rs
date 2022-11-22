@@ -60,7 +60,7 @@ impl Display for Operation {
 #[serde(rename_all = "camelCase")]
 pub struct Definition {
   pub word: String,
-  #[serde(rename = "text")]
+  #[serde(default, rename = "text")]
   pub definition: String,
   #[serde(default)]
   pub part_of_speech: String,
@@ -129,7 +129,8 @@ impl Wordnik {
       + "?api_key="
       + &self.api_key;
     let res = self.make_request(url)?;
-    let definitions: Vec<Definition> = serde_json::from_value(res)?;
+    let mut definitions: Vec<Definition> = serde_json::from_value(res)?;
+    definitions.retain(|def| def.definition != "" );
     Ok(definitions)
   }
 
