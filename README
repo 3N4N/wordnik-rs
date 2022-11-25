@@ -1,7 +1,8 @@
 Wordnik-rs
 ==========
 
-Wordnik-rs is a Rust library wrapper of Wordnik API.
+Wordnik-rs is a Rust library wrapper of Wordnik API. This is not an
+official library created or endorsed by Wordnik.
 
 Visit https://wordnik.com for more.
 
