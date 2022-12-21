@@ -130,13 +130,25 @@ impl Wordnik {
       + &self.api_key;
     let res = self.make_request(url)?;
     let mut definitions: Vec<Definition> = serde_json::from_value(res)?;
-    definitions.retain(|def| def.definition != "" );
+    definitions.retain(|def| def.definition != "");
     Ok(definitions)
   }
 
   /// Get definitions of a word.
   ///
-  /// # Example
+  /// # Arguments
+  ///
+  /// * `word` - The word whose meaning you want
+  /// * `dicts` - The dictionaries you want to use.
+  ///             Pass an empty vector if you want to use all.
+  ///             The available dictionaries are:
+  ///               - "ahd-5": American Heritage Dictionary
+  ///               - "century": The Century Dictionary
+  ///               - "gcide": GNU version of the Collaborative International Dictionary of English
+  ///               - "wiktionary": Wiktionary
+  ///               - "wordnet": WordNet 3.0 Copyright 2006 by Princeton University
+  ///
+  /// # Examples
   ///
   /// ```
   /// use wordnik::Wordnik;
@@ -146,20 +158,22 @@ impl Wordnik {
   ///   "https://api.wordnik.com/v4/word.json/".to_string(),
   /// );
   ///
-  /// let v = api.get_definitions_pretty("word").unwrap();
+  /// let v = api.get_definitions_pretty("word", vec!["ahd-5", "wordnet"]).unwrap();
   /// println!("{}", v);
   /// ```
   pub fn get_definitions_pretty(
     &self,
     word: &str,
+    dicts: Vec<&str>,
   ) -> Result<String, Box<dyn std::error::Error>> {
     let definitions = self.get_definitions(word)?;
     let mut hm_definitions: HashMap<String, Vec<Definition>> = HashMap::new();
+    let filter_dict = dicts.len() > 0;
     for i in &definitions {
       if hm_definitions.contains_key(&i.attribution_text) {
         let v = hm_definitions.get_mut(&i.attribution_text).unwrap();
         v.push(i.clone());
-      } else {
+      } else if !filter_dict || dicts.contains(&i.source_dictionary.as_str()) {
         let mut v: Vec<Definition> = Vec::new();
         v.push(i.clone());
         hm_definitions.insert(i.attribution_text.clone(), v);
