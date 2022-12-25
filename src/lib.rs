@@ -138,15 +138,17 @@ impl Wordnik {
   ///
   /// # Arguments
   ///
-  /// * `word` - The word whose meaning you want
-  /// * `dicts` - The dictionaries you want to use.
-  ///             Pass an empty vector if you want to use all.
-  ///             The available dictionaries are:
-  ///               - "ahd-5": American Heritage Dictionary
-  ///               - "century": The Century Dictionary
-  ///               - "gcide": GNU version of the Collaborative International Dictionary of English
-  ///               - "wiktionary": Wiktionary
-  ///               - "wordnet": WordNet 3.0 Copyright 2006 by Princeton University
+  /// * `word`      - The word whose meaning you want.
+  /// * `textwidth` - The column at which to wrap the text.
+  ///                 Pass 0 if you want want to wrap at all.
+  /// * `dicts`     - The dictionaries you want to use.
+  ///                 Pass an empty vector if you want to use all.
+  ///                 The available dictionaries are:
+  ///                   - "ahd-5": American Heritage Dictionary
+  ///                   - "century": The Century Dictionary
+  ///                   - "gcide": GNU version of the Collaborative International Dictionary of English
+  ///                   - "wiktionary": Wiktionary
+  ///                   - "wordnet": WordNet 3.0 Copyright 2006 by Princeton University
   ///
   /// # Examples
   ///
@@ -164,6 +166,7 @@ impl Wordnik {
   pub fn get_definitions_pretty(
     &self,
     word: &str,
+    textwidth: usize,
     dicts: Vec<&str>,
   ) -> Result<String, Box<dyn std::error::Error>> {
     let definitions = self.get_definitions(word)?;
@@ -192,6 +195,10 @@ impl Wordnik {
           })
           .as_str()
         + "\n";
+    }
+
+    if textwidth != 0 {
+      s = textwrap::fill(s.as_str(), textwidth);
     }
 
     Ok(s)
